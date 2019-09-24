@@ -31,22 +31,22 @@ ggplot(GroupSevMode,aes(x = `Mode of Travel`,y = n)) +
 
 write.table(GroupSevMode, sep = ",")
 
-NumPowered2Wheelers <- 110000
-NumPushBikerJourneys <- 721000 
+NumPowered2Wheelers <- 110000 * 365
+NumPushBikerJourneys <- 721000 * 365
 
-GroupSevMode$perHundredThousand = 0
+GroupSevMode$perMillion = 0
 
 GroupSevMode <- GroupSevMode %>% mutate(is.cycle = `Mode of Travel` == "Pedal Cycle",
-                                        perHundredThousand = ifelse(is.cycle, n/NumPushBikerJourneys*100000, perHundredThousand))
+                                        perMillion = ifelse(is.cycle, n/NumPushBikerJourneys*1000000, perMillion))
 GroupSevMode <- GroupSevMode %>% mutate(is.wheeler = `Mode of Travel` == "Powered Wheeler",
-                                        perHundredThousand = ifelse(is.wheeler, n/NumPowered2Wheelers*100000, perHundredThousand))
+                                        perMillion = ifelse(is.wheeler, n/NumPowered2Wheelers*1000000, perMillion))
 
 GroupSevMode$is.cycle <- NULL
 GroupSevMode$is.wheeler <- NULL
 
-ggplot(GroupSevMode,aes(x = `Mode of Travel`,y = perHundredThousand))+
-  geom_bar(aes(fill = `Casualty Severity`),stat = "identity",position = "dodge") + ggtitle("Casualty of London Accidents") +labs(y= "Incidents per 100000", x = "Mode of Travel")
+ggplot(GroupSevMode,aes(x = `Mode of Travel`,y = perMillion))+
+  geom_bar(aes(fill = `Casualty Severity`),stat = "identity",position = "dodge") + ggtitle("Casualty of London Accidents") +labs(y= "Incidents per 1 Million Journeys", x = "Mode of Travel")
 
-ggplot(GroupSevMode,aes(x = `Mode of Travel`,y = perHundredThousand))+scale_y_log10()+
+ggplot(GroupSevMode,aes(x = `Mode of Travel`,y = perMillion))+scale_y_sqrt()+
   geom_bar(aes(fill = `Casualty Severity`),stat = "identity",position = "dodge") + ggtitle("Casualty of London Accidents") +
-  labs(y= "Incidents per 100000", x = "Mode of Travel",subtitle = "y-axis in log scale")
+  labs(y= "Incidents per 1 Million Journeys", x = "Mode of Travel",subtitle = "y-axis in sqrt scale")
